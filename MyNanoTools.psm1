@@ -112,20 +112,25 @@ $PSBoundParameters.Remove("Start") | Out-Null
 
 #create a hashtable of parameters for Set-VM
 $set = @{
- MemoryMinimumBytes = $MemoryStartupBytes
+ MemoryStartupBytes = $MemoryStartupBytes
  ProcessorCount = $ProcessorCount
 }
 
 if ($Memory -eq 'Dynamic') {
     $set.Add("DynamicMemory",$True)
     $set.Add("MemoryMaximumBytes", $MemoryMaximumBytes)
+    $set.Add("MemoryMinimumBytes", $MemoryStartupBytes)
 }
 else {
-    $set.Add("StaticMemory",$True)
+    $set.Add("StaticMemory",$True)   
 }
 
+write-verbose "Creating VM with these parameters"
+Write-verbose ($PSBoundParameters | Out-String)
 $vm = New-VM @PSBoundParameters
 
+Write-verbose "Setting VM with these parameters"
+Write-verbose ($set| Out-String)
 $vm | Set-VM @set
 
 if ($start) {
