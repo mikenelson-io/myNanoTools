@@ -89,7 +89,7 @@ Param(
 [ValidateSet("Dynamic","Static")]
 [string]$Memory = "Dynamic",
 [ValidateNotNullorEmpty()]
-[int32]$MemoryStartupBytes = 512MB,
+[int64]$MemoryStartupBytes = 512MB,
 [ValidateNotNullorEmpty()]
 #this will be ignored if using Static memory
 [int64]$MemoryMaximumBytes = 1GB,
