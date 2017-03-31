@@ -7,7 +7,7 @@ schema: 2.0.0
 # New-MyNanoVM
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+Create a new Nano server virtual machine.
 
 ## SYNTAX
 
@@ -18,16 +18,38 @@ New-MyNanoVM [-Name] <String> [-VhdPath] <String> -Path <String> [-Memory <Strin
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+Use this command to create a new Nano Server Hyper-V virtual machine. It is assumed that you have already created the Nano server disk image file.
 
 ## EXAMPLES
 
 ### Example 1
 ```
-PS C:\> {{ Add example code here }}
+PS C:\> New-MyNanoVM -name Nfoo -vhdpath e:\vmdisks\nfoo.vhdx -processorcount 2 -switchname Lab
 ```
 
-{{ Add example description here }}
+Create a new virtual machine called Nfoo using the specified vhdx file. The VM will be configured with default memory settings, 2 processors and assigned to the Lab virtual switch.
+
+### Example 2
+```
+PS C:\> $imgparam = @{
+    ComputerName = "N-SRV1"
+    Plaintext = "P@ssw0rd"
+    IPv4Address = "172.16.40.2"
+    DiskPath = "E:\VMdisks"
+    ConfigData = ".\nanoFile.psd1"
+    DomainName = "globomantics"
+    ReuseDomainNode = $True
+}
+PS C:\> $vmparam = @{
+    Path = "E:\VMs" 
+    SwitchName = "DomainNet" 
+    MemoryStartupBytes = 1GB
+    start = $True
+}
+PS C:\> New-MyNanoImage @imgparam | New-MyNanoVM @vmparam
+```
+
+Create a new virtual image and pipe the output to New-MyNanoVM using the specified parameters.
 
 ## PARAMETERS
 
@@ -47,7 +69,7 @@ Accept wildcard characters: False
 ```
 
 ### -Memory
-{{Fill Memory Description}}
+Indicated whether you want the virtual machine to use Dynamic or Static memory.
 
 ```yaml
 Type: String
@@ -63,8 +85,7 @@ Accept wildcard characters: False
 ```
 
 ### -MemoryMaximumBytes
-{{Fill MemoryMaximumBytes Description}}
-
+This will be ignored if using Static memory setting.
 ```yaml
 Type: Int64
 Parameter Sets: (All)
@@ -72,13 +93,12 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: 1073741824
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -MemoryStartupBytes
-{{Fill MemoryStartupBytes Description}}
 
 ```yaml
 Type: Int64
@@ -87,13 +107,13 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: 536870912
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -Name
-{{Fill Name Description}}
+The name for the new virtual machine. Typically this will be the same as the Nano computername.
 
 ```yaml
 Type: String
@@ -108,7 +128,7 @@ Accept wildcard characters: False
 ```
 
 ### -Path
-{{Fill Path Description}}
+The path where the new virtual machine configuration will be stored. You could use your Hyper-V default location but you would need to explicitly specify it: (get-vmhost).VirtualHardDiskPath
 
 ```yaml
 Type: String
@@ -123,7 +143,7 @@ Accept wildcard characters: False
 ```
 
 ### -ProcessorCount
-{{Fill ProcessorCount Description}}
+The number of processors for the new virtual machine.
 
 ```yaml
 Type: Int32
@@ -138,7 +158,7 @@ Accept wildcard characters: False
 ```
 
 ### -Start
-{{Fill Start Description}}
+Start the virtual machine after configuration.
 
 ```yaml
 Type: SwitchParameter
@@ -153,7 +173,7 @@ Accept wildcard characters: False
 ```
 
 ### -SwitchName
-{{Fill SwitchName Description}}
+The name of a Hyper-V switch to connect the virtual machine. 
 
 ```yaml
 Type: String
@@ -168,7 +188,7 @@ Accept wildcard characters: False
 ```
 
 ### -VhdPath
-{{Fill VhdPath Description}}
+The path to the VHDX pile
 
 ```yaml
 Type: String
@@ -202,12 +222,13 @@ Accept wildcard characters: False
 
 ### System.String
 
-
 ## OUTPUTS
 
 ### System.Object
 
 ## NOTES
+Learn more about PowerShell:
+http://jdhitsolutions.com/blog/essential-powershell-resources/
 
 ## RELATED LINKS
-
+[New-MyNanoImage](New-MyNanoImage.md)

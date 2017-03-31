@@ -1,0 +1,999 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<helpItems xmlns="http://msh" schema="maml">
+
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<command:details><command:name>New-MyNanoImage</command:name>
+<command:verb>New</command:verb>
+<command:noun>MyNanoImage</command:noun>
+<maml:description><maml:para>Create a new Nano server image.
+</maml:para>
+</maml:description>
+</command:details>
+<maml:description><maml:para>This command will create a new Nano server disk image using commands from the NanoServerImageGenerator module. Many of the parameters from this command will be passed to the underlying New-NanoServerImage function.
+</maml:para>
+</maml:description>
+<command:syntax><command:syntaxItem><maml:name>New-MyNanoImage</maml:name>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="name"><maml:name>ComputerName</maml:name>
+<maml:Description><maml:para>The name of the new Nano server.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none"><maml:name>Plaintext</maml:name>
+<maml:Description><maml:para>The initial Administrator password. You can change this later.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none"><maml:name>IPv4Address</maml:name>
+<maml:Description><maml:para>The IPv4 address for the new Nano server image. There is no validation in this command that the address is correct or available.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none"><maml:name>ConfigData</maml:name>
+<maml:Description><maml:para>The path to the psd1 file with additional configuration information.
+</maml:para>
+<maml:para>You can automate the process more efficiently with a ConfigData file. In fact, this is a required parameter. The psd1 file that might look like this:
+</maml:para>
+<maml:para>
+</maml:para>
+<maml:para>
+@{
+    BasePath = "D:\2016Media\NanoServer"
+    Edition = "standard"
+    DeploymentType = "Guest"
+    InterfaceNameorIndex = "Ethernet"
+    EnableEMS = $True
+    EnableRemoteManagementPort = $True
+    ipV4DNS = "172.16.30.203"
+    IPv4Subnet = "255.255.0.0"
+    IPv4Gateway = "172.16.10.254"
+    EMSPort = 1
+    EMSBaudRate = 115200
+    Defender = $True
+    Clustering = $false
+    Storage = $False
+    Containers = $False
+    Compute = $False
+    Package = @('Microsoft-NanoServer-Guest-Package','Microsoft-NanoServer-DSC-Package')
+}
+</maml:para>
+<maml:para>
+</maml:para>
+<maml:para>You can use this to set common and default values for your environment. Keys can be any parameter from New-NanoServerImage that isn't specified as a parameter in the New-MyNanoImage function.
+</maml:para>
+<maml:para>The BasePath setting is the folder with the Nanoserver.wim and the Packages folder. The Diskpath setting is where to create the VHDX file. DeploymentType and Edition are also required.
+</maml:para>
+<maml:para>Depending on your configuration you might want to add: MaxSize ServicePackages UnattendPath Development
+</maml:para>
+<maml:para>With a configuration file you can create settings for different types of Nano installations such as DNS or Containers.
+</maml:para>
+<maml:para>A sample file (nanodefaults.psd1) is included in the module directory.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none"><maml:name>DiskPath</maml:name>
+<maml:Description><maml:para>The directory for the new file. The disk file will be constructed from the computer name. You only need to specify the DiskPath like D:\VMDisks.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="5" aliases="none"><maml:name>SetupCompleteCommand</maml:name>
+<maml:Description><maml:para>Specifies an array of commands to run after setup completes.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="6" aliases="none"><maml:name>CopyPath</maml:name>
+<maml:Description><maml:para>Files to be copied to the root of C: in the new Nano server image.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+<dev:type><maml:name>String[]</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="7" aliases="none"><maml:name>DomainName</maml:name>
+<maml:Description><maml:para>The name of an Active Directory domain to join.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="8" aliases="none"><maml:name>DomainBlobPath</maml:name>
+<maml:Description><maml:para>The path to a saved domain blob for an offline domain join.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="cf"><maml:name>Confirm</maml:name>
+<maml:Description><maml:para>Prompts you for confirmation before running the cmdlet.
+</maml:para>
+</maml:Description>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>ReuseDomainNode</maml:name>
+<maml:Description><maml:para>If joining a domain and a matching AD Computer account already exists, then use it instead of the domain blob.
+</maml:para>
+</maml:Description>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="wi"><maml:name>WhatIf</maml:name>
+<maml:Description><maml:para>Shows what would happen if the cmdlet runs. The cmdlet is not run.
+</maml:para>
+</maml:Description>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+</command:syntaxItem>
+</command:syntax>
+<command:parameters><command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="name"><maml:name>ComputerName</maml:name>
+<maml:Description><maml:para>The name of the new Nano server.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none"><maml:name>ConfigData</maml:name>
+<maml:Description><maml:para>The path to the psd1 file with additional configuration information.
+</maml:para>
+<maml:para>You can automate the process more efficiently with a ConfigData file. In fact, this is a required parameter. The psd1 file that might look like this:
+</maml:para>
+<maml:para>
+</maml:para>
+<maml:para>
+@{
+    BasePath = "D:\2016Media\NanoServer"
+    Edition = "standard"
+    DeploymentType = "Guest"
+    InterfaceNameorIndex = "Ethernet"
+    EnableEMS = $True
+    EnableRemoteManagementPort = $True
+    ipV4DNS = "172.16.30.203"
+    IPv4Subnet = "255.255.0.0"
+    IPv4Gateway = "172.16.10.254"
+    EMSPort = 1
+    EMSBaudRate = 115200
+    Defender = $True
+    Clustering = $false
+    Storage = $False
+    Containers = $False
+    Compute = $False
+    Package = @('Microsoft-NanoServer-Guest-Package','Microsoft-NanoServer-DSC-Package')
+}
+</maml:para>
+<maml:para>
+</maml:para>
+<maml:para>You can use this to set common and default values for your environment. Keys can be any parameter from New-NanoServerImage that isn't specified as a parameter in the New-MyNanoImage function.
+</maml:para>
+<maml:para>The BasePath setting is the folder with the Nanoserver.wim and the Packages folder. The Diskpath setting is where to create the VHDX file. DeploymentType and Edition are also required.
+</maml:para>
+<maml:para>Depending on your configuration you might want to add: MaxSize ServicePackages UnattendPath Development
+</maml:para>
+<maml:para>With a configuration file you can create settings for different types of Nano installations such as DNS or Containers.
+</maml:para>
+<maml:para>A sample file (nanodefaults.psd1) is included in the module directory.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="cf"><maml:name>Confirm</maml:name>
+<maml:Description><maml:para>Prompts you for confirmation before running the cmdlet.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="6" aliases="none"><maml:name>CopyPath</maml:name>
+<maml:Description><maml:para>Files to be copied to the root of C: in the new Nano server image.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+<dev:type><maml:name>String[]</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none"><maml:name>DiskPath</maml:name>
+<maml:Description><maml:para>The directory for the new file. The disk file will be constructed from the computer name. You only need to specify the DiskPath like D:\VMDisks.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="8" aliases="none"><maml:name>DomainBlobPath</maml:name>
+<maml:Description><maml:para>The path to a saved domain blob for an offline domain join.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="7" aliases="none"><maml:name>DomainName</maml:name>
+<maml:Description><maml:para>The name of an Active Directory domain to join.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none"><maml:name>IPv4Address</maml:name>
+<maml:Description><maml:para>The IPv4 address for the new Nano server image. There is no validation in this command that the address is correct or available.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none"><maml:name>Plaintext</maml:name>
+<maml:Description><maml:para>The initial Administrator password. You can change this later.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>ReuseDomainNode</maml:name>
+<maml:Description><maml:para>If joining a domain and a matching AD Computer account already exists, then use it instead of the domain blob.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="5" aliases="none"><maml:name>SetupCompleteCommand</maml:name>
+<maml:Description><maml:para>Specifies an array of commands to run after setup completes.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="wi"><maml:name>WhatIf</maml:name>
+<maml:Description><maml:para>Shows what would happen if the cmdlet runs. The cmdlet is not run.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+</command:parameters>
+<command:inputTypes><command:inputType><dev:type><maml:name>None</maml:name>
+</dev:type>
+<maml:description><maml:para>
+</maml:para>
+</maml:description>
+</command:inputType>
+</command:inputTypes>
+<command:returnValues><command:returnValue><dev:type><maml:name>System.Object</maml:name>
+</dev:type>
+<maml:description><maml:para>
+</maml:para>
+</maml:description>
+</command:returnValue>
+</command:returnValues>
+<maml:alertSet><maml:alert><maml:para>Learn more about PowerShell: http://jdhitsolutions.com/blog/essential-powershell-resources/
+</maml:para>
+</maml:alert>
+</maml:alertSet>
+<command:examples><command:example><maml:title>Example 1</maml:title>
+<dev:code>PS C:\&gt; New-MyNanoImage -ComputerName "NFoo" -Plaintext "P@ssw0rd" -IPv4Address "172.16.80.2" -DiskPath "E:\VMdisks" -ConfigData "c:\work\NanoDefaults.psd1" -DomainName "globomantics" -ReuseDomainNode $True</dev:code>
+<dev:remarks><maml:para>Create a Nano server image called NFoo with the given IP address that will belong to the Globomantics domain. An AD computer account for NFoo has already been created. The disk file will be created at E:\VMDisks\Nfoo.vhdx using additional settings from the NanoDefaults.psd1 file.
+</maml:para>
+</dev:remarks>
+</command:example>
+</command:examples>
+<command:relatedLinks><maml:navigationLink><maml:linkText>New-NanoServerImage</maml:linkText>
+<maml:uri></maml:uri>
+</maml:navigationLink>
+<maml:navigationLink><maml:linkText>New-MyNanoVM</maml:linkText>
+<maml:uri></maml:uri>
+</maml:navigationLink>
+</command:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<command:details><command:name>New-MyNanoVM</command:name>
+<command:verb>New</command:verb>
+<command:noun>MyNanoVM</command:noun>
+<maml:description><maml:para>Create a new Nano server virtual machine.
+</maml:para>
+</maml:description>
+</command:details>
+<maml:description><maml:para>Use this command to create a new Nano Server Hyper-V virtual machine. It is assumed that you have already created the Nano server disk image file.
+</maml:para>
+</maml:description>
+<command:syntax><command:syntaxItem><maml:name>New-MyNanoVM</maml:name>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="0" aliases="none"><maml:name>Name</maml:name>
+<maml:Description><maml:para>The name for the new virtual machine. Typically this will be the same as the Nano computername.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="1" aliases="none"><maml:name>VhdPath</maml:name>
+<maml:Description><maml:para>The path to the VHDX pile
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="cf"><maml:name>Confirm</maml:name>
+<maml:Description><maml:para>Prompts you for confirmation before running the cmdlet.
+</maml:para>
+</maml:Description>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>Memory</maml:name>
+<maml:Description><maml:para>Indicated whether you want the virtual machine to use Dynamic or Static memory.
+</maml:para>
+</maml:Description>
+<command:parameterValueGroup><command:parameterValue required="false" variableLength="false">Dynamic</command:parameterValue>
+<command:parameterValue required="false" variableLength="false">Static</command:parameterValue>
+</command:parameterValueGroup>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>MemoryMaximumBytes</maml:name>
+<maml:Description><maml:para>This will be ignored if using Static memory setting.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">Int64</command:parameterValue>
+<dev:type><maml:name>Int64</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>1073741824</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>MemoryStartupBytes</maml:name>
+<maml:Description><maml:para>
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">Int64</command:parameterValue>
+<dev:type><maml:name>Int64</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>536870912</dev:defaultValue>
+</command:parameter>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>Path</maml:name>
+<maml:Description><maml:para>The path where the new virtual machine configuration will be stored. You could use your Hyper-V default location but you would need to explicitly specify it: (get-vmhost).VirtualHardDiskPath
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>ProcessorCount</maml:name>
+<maml:Description><maml:para>The number of processors for the new virtual machine.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+<dev:type><maml:name>Int32</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>Start</maml:name>
+<maml:Description><maml:para>Start the virtual machine after configuration.
+</maml:para>
+</maml:Description>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>SwitchName</maml:name>
+<maml:Description><maml:para>The name of a Hyper-V switch to connect the virtual machine.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="wi"><maml:name>WhatIf</maml:name>
+<maml:Description><maml:para>Shows what would happen if the cmdlet runs. The cmdlet is not run.
+</maml:para>
+</maml:Description>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+</command:syntaxItem>
+</command:syntax>
+<command:parameters><command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="cf"><maml:name>Confirm</maml:name>
+<maml:Description><maml:para>Prompts you for confirmation before running the cmdlet.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>Memory</maml:name>
+<maml:Description><maml:para>Indicated whether you want the virtual machine to use Dynamic or Static memory.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>MemoryMaximumBytes</maml:name>
+<maml:Description><maml:para>This will be ignored if using Static memory setting.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">Int64</command:parameterValue>
+<dev:type><maml:name>Int64</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>1073741824</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>MemoryStartupBytes</maml:name>
+<maml:Description><maml:para>
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">Int64</command:parameterValue>
+<dev:type><maml:name>Int64</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>536870912</dev:defaultValue>
+</command:parameter>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="0" aliases="none"><maml:name>Name</maml:name>
+<maml:Description><maml:para>The name for the new virtual machine. Typically this will be the same as the Nano computername.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>Path</maml:name>
+<maml:Description><maml:para>The path where the new virtual machine configuration will be stored. You could use your Hyper-V default location but you would need to explicitly specify it: (get-vmhost).VirtualHardDiskPath
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>ProcessorCount</maml:name>
+<maml:Description><maml:para>The number of processors for the new virtual machine.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+<dev:type><maml:name>Int32</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>Start</maml:name>
+<maml:Description><maml:para>Start the virtual machine after configuration.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>SwitchName</maml:name>
+<maml:Description><maml:para>The name of a Hyper-V switch to connect the virtual machine.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="1" aliases="none"><maml:name>VhdPath</maml:name>
+<maml:Description><maml:para>The path to the VHDX pile
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="wi"><maml:name>WhatIf</maml:name>
+<maml:Description><maml:para>Shows what would happen if the cmdlet runs. The cmdlet is not run.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+</command:parameters>
+<command:inputTypes><command:inputType><dev:type><maml:name>System.String</maml:name>
+</dev:type>
+<maml:description><maml:para>
+</maml:para>
+</maml:description>
+</command:inputType>
+</command:inputTypes>
+<command:returnValues><command:returnValue><dev:type><maml:name>System.Object</maml:name>
+</dev:type>
+<maml:description><maml:para>
+</maml:para>
+</maml:description>
+</command:returnValue>
+</command:returnValues>
+<maml:alertSet><maml:alert><maml:para>Learn more about PowerShell: http://jdhitsolutions.com/blog/essential-powershell-resources/
+</maml:para>
+</maml:alert>
+</maml:alertSet>
+<command:examples><command:example><maml:title>Example 1</maml:title>
+<dev:code>PS C:\&gt; New-MyNanoVM -name Nfoo -vhdpath e:\vmdisks\nfoo.vhdx -processorcount 2 -switchname Lab</dev:code>
+<dev:remarks><maml:para>Create a new virtual machine called Nfoo using the specified vhdx file. The VM will be configured with default memory settings, 2 processors and assigned to the Lab virtual switch.
+</maml:para>
+</dev:remarks>
+</command:example>
+<command:example><maml:title>Example 2</maml:title>
+<dev:code>PS C:\&gt; $imgparam = @{
+    ComputerName = "N-SRV1"
+    Plaintext = "P@ssw0rd"
+    IPv4Address = "172.16.40.2"
+    DiskPath = "E:\VMdisks"
+    ConfigData = ".\nanoFile.psd1"
+    DomainName = "globomantics"
+    ReuseDomainNode = $True
+}
+PS C:\&gt; $vmparam = @{
+    Path = "E:\VMs" 
+    SwitchName = "DomainNet" 
+    MemoryStartupBytes = 1GB
+    start = $True
+}
+PS C:\&gt; New-MyNanoImage @imgparam | New-MyNanoVM @vmparam</dev:code>
+<dev:remarks><maml:para>Create a new virtual image and pipe the output to New-MyNanoVM using the specified parameters.
+</maml:para>
+</dev:remarks>
+</command:example>
+</command:examples>
+<command:relatedLinks><maml:navigationLink><maml:linkText>New-MyNanoImage</maml:linkText>
+<maml:uri></maml:uri>
+</maml:navigationLink>
+</command:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<command:details><command:name>Set-MatchingTimeZone</command:name>
+<command:verb>Set</command:verb>
+<command:noun>MatchingTimeZone</command:noun>
+<maml:description><maml:para>Set the virtual machine time zone to match the Hyper-V host.
+</maml:para>
+</maml:description>
+</command:details>
+<maml:description><maml:para>Set the time zone for the Nano server, or any computer, to that of the local host which is presumably the Hyper-V host. This command uses PowerShell remoting to make the change.
+</maml:para>
+</maml:description>
+<command:syntax><command:syntaxItem><maml:name>Set-MatchingTimeZone</maml:name>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="cn"><maml:name>Computername</maml:name>
+<maml:Description><maml:para>Enter the name of a Nano server to update
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="cf"><maml:name>Confirm</maml:name>
+<maml:Description><maml:para>Prompts you for confirmation before running the cmdlet.
+</maml:para>
+</maml:Description>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>Credential</maml:name>
+<maml:Description><maml:para>An alternate credential for the remote server connection.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
+<dev:type><maml:name>PSCredential</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="wi"><maml:name>WhatIf</maml:name>
+<maml:Description><maml:para>Shows what would happen if the cmdlet runs. The cmdlet is not run.
+</maml:para>
+</maml:Description>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+</command:syntaxItem>
+</command:syntax>
+<command:parameters><command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="cn"><maml:name>Computername</maml:name>
+<maml:Description><maml:para>Enter the name of a Nano server to update
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="cf"><maml:name>Confirm</maml:name>
+<maml:Description><maml:para>Prompts you for confirmation before running the cmdlet.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>Credential</maml:name>
+<maml:Description><maml:para>An alternate credential for the remote server connection.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
+<dev:type><maml:name>PSCredential</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="wi"><maml:name>WhatIf</maml:name>
+<maml:Description><maml:para>Shows what would happen if the cmdlet runs. The cmdlet is not run.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+</command:parameters>
+<command:inputTypes><command:inputType><dev:type><maml:name>System.String</maml:name>
+</dev:type>
+<maml:description><maml:para>
+</maml:para>
+</maml:description>
+</command:inputType>
+</command:inputTypes>
+<command:returnValues><command:returnValue><dev:type><maml:name>System.Object</maml:name>
+</dev:type>
+<maml:description><maml:para>
+</maml:para>
+</maml:description>
+</command:returnValue>
+</command:returnValues>
+<maml:alertSet><maml:alert><maml:para>Learn more about PowerShell: http://jdhitsolutions.com/blog/essential-powershell-resources/
+</maml:para>
+</maml:alert>
+</maml:alertSet>
+<command:examples><command:example><maml:title>Example 1</maml:title>
+<dev:code>PS C:\&gt; Set-Matchingtimezone N-SRV8.globomantics.local -credential globomantics\administrator
+
+PSComputerName            Id
+--------------            --
+N-SRV8.globomantics.local Eastern Standard Time</dev:code>
+<dev:remarks><maml:para>
+</maml:para>
+</dev:remarks>
+</command:example>
+</command:examples>
+<command:relatedLinks><maml:navigationLink><maml:linkText>Get-TimeZone</maml:linkText>
+<maml:uri></maml:uri>
+</maml:navigationLink>
+<maml:navigationLink><maml:linkText>Set-TimeZone</maml:linkText>
+<maml:uri></maml:uri>
+</maml:navigationLink>
+</command:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<command:details><command:name>Test-IsNanoServer</command:name>
+<command:verb>Test</command:verb>
+<command:noun>IsNanoServer</command:noun>
+<maml:description><maml:para>Test if a computer is a Nano server installation.
+</maml:para>
+</maml:description>
+</command:details>
+<maml:description><maml:para>Test if a given computer is a Nano server installation.
+</maml:para>
+</maml:description>
+<command:syntax><command:syntaxItem><maml:name>Test-IsNanoServer</maml:name>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="cn"><maml:name>Computername</maml:name>
+<maml:Description><maml:para>Enter a computer name to test
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+<dev:type><maml:name>String[]</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none"><maml:name>Credential</maml:name>
+<maml:Description><maml:para>An alternate credential for the remote server connection.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
+<dev:type><maml:name>PSCredential</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>Quiet</maml:name>
+<maml:Description><maml:para>Suppress normal output and return either True or False.
+</maml:para>
+</maml:Description>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+</command:syntaxItem>
+</command:syntax>
+<command:parameters><command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="cn"><maml:name>Computername</maml:name>
+<maml:Description><maml:para>Enter a computer name to test
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+<dev:type><maml:name>String[]</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none"><maml:name>Credential</maml:name>
+<maml:Description><maml:para>An alternate credential for the remote server connection.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
+<dev:type><maml:name>PSCredential</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>Quiet</maml:name>
+<maml:Description><maml:para>Suppress normal output and return either True or False.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+</command:parameters>
+<command:inputTypes><command:inputType><dev:type><maml:name>System.String[]</maml:name>
+</dev:type>
+<maml:description><maml:para>
+</maml:para>
+</maml:description>
+</command:inputType>
+</command:inputTypes>
+<command:returnValues><command:returnValue><dev:type><maml:name>System.Object</maml:name>
+</dev:type>
+<maml:description><maml:para>
+</maml:para>
+</maml:description>
+</command:returnValue>
+</command:returnValues>
+<maml:alertSet><maml:alert><maml:para>Learn more about PowerShell: http://jdhitsolutions.com/blog/essential-powershell-resources/
+</maml:para>
+</maml:alert>
+</maml:alertSet>
+<command:examples><command:example><maml:title>Example 1</maml:title>
+<dev:code>PS C:\&gt;  test-isnanoserver chi-dc04,chi-p50,chi-nweb
+
+Computername Caption                                  OperatingSystemSKU IsNano
+------------ -------                                  ------------------ ------
+CHI-DC04     Microsoft Windows Server 2012 Datacenter                  8  False
+CHI-P50      Microsoft Windows Server 2016 Datacenter                  8  False
+CHI-NWEB     Microsoft Windows Server 2016 Standard                  144   True</dev:code>
+<dev:remarks><maml:para>
+</maml:para>
+</dev:remarks>
+</command:example>
+<command:example><maml:title>Example 2</maml:title>
+<dev:code>PS C:\&gt; 'chi-dc04','chi-p50','chi-nweb' | where {Test-IsNanoServer $_ -quiet -credential $cred}
+chi-nweb</dev:code>
+<dev:remarks><maml:para>Filter a list of computer names to get only Nano servers.
+</maml:para>
+</dev:remarks>
+</command:example>
+</command:examples>
+<command:relatedLinks><maml:navigationLink><maml:linkText>Get-CimInstance</maml:linkText>
+<maml:uri></maml:uri>
+</maml:navigationLink>
+</command:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<command:details><command:name>Update-MyNanoServer</command:name>
+<command:verb>Update</command:verb>
+<command:noun>NanoServer</command:noun>
+<maml:description><maml:para>Get Windows updates on a Nano server installation.
+</maml:para>
+</maml:description>
+</command:details>
+<maml:description><maml:para>Get and install Windows updates for a Nano server. This command uses the CIM cmdlets.
+</maml:para>
+</maml:description>
+<command:syntax><command:syntaxItem><maml:name>Update-MyNanoServer</maml:name>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="cn"><maml:name>Computername</maml:name>
+<maml:Description><maml:para>Enter the name of a Nano server to update
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="cf"><maml:name>Confirm</maml:name>
+<maml:Description><maml:para>Prompts you for confirmation before running the cmdlet.
+</maml:para>
+</maml:Description>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>Credential</maml:name>
+<maml:Description><maml:para>An alternate credential for the remote CIM connection.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
+<dev:type><maml:name>PSCredential</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>ScanOnly</maml:name>
+<maml:Description><maml:para>Don't install any updates, list them only.
+</maml:para>
+</maml:Description>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="wi"><maml:name>WhatIf</maml:name>
+<maml:Description><maml:para>Shows what would happen if the cmdlet runs. The cmdlet is not run.
+</maml:para>
+</maml:Description>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+</command:syntaxItem>
+</command:syntax>
+<command:parameters><command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="cn"><maml:name>Computername</maml:name>
+<maml:Description><maml:para>Enter the name of a Nano server to update
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="cf"><maml:name>Confirm</maml:name>
+<maml:Description><maml:para>Prompts you for confirmation before running the cmdlet.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>Credential</maml:name>
+<maml:Description><maml:para>An alternate credential for the remote CIM connection.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
+<dev:type><maml:name>PSCredential</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>ScanOnly</maml:name>
+<maml:Description><maml:para>Don't install any updates, list them only.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="wi"><maml:name>WhatIf</maml:name>
+<maml:Description><maml:para>Shows what would happen if the cmdlet runs. The cmdlet is not run.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>False</dev:defaultValue>
+</command:parameter>
+</command:parameters>
+<command:inputTypes><command:inputType><dev:type><maml:name>System.String</maml:name>
+</dev:type>
+<maml:description><maml:para>
+</maml:para>
+</maml:description>
+</command:inputType>
+</command:inputTypes>
+<command:returnValues><command:returnValue><dev:type><maml:name>System.Object</maml:name>
+</dev:type>
+<maml:description><maml:para>
+</maml:para>
+</maml:description>
+</command:returnValue>
+</command:returnValues>
+<maml:alertSet><maml:alert><maml:para>Learn more about PowerShell: http://jdhitsolutions.com/blog/essential-powershell-resources/
+</maml:para>
+</maml:alert>
+</maml:alertSet>
+<command:examples><command:example><maml:title>Example 1</maml:title>
+<dev:code>PS C:\&gt;Update-MyNanoServer chi-nweb -ScanOnly
+
+
+KBArticleID    : KB4013418
+Description    : Install this update to resolve issues in Windows. For a 
+                 complete listing of the issues that are included
+                 in this update, see the associated Microsoft Knowledge Base 
+                 article for more information. After you install this item, 
+                 you may have to restart your computer.
+MsrcSeverity   :
+RevisionNumber : 200
+Title          : Update for Windows Server 2016 for x64-based Systems (KB4013418)
+UpdateID       : 025c4f16-fea1-4ea9-91fd-32209b4d8998
+PSComputerName : chi-nweb
+
+KBArticleID    : KB4015438
+Description    : Install this update to resolve issues in Windows. For a 
+                 complete listing of the issues that are included
+                 in this update, see the associated Microsoft Knowledge Base 
+                 article for more information. After you install this item, 
+                 you may have to restart your computer.
+MsrcSeverity   :
+RevisionNumber : 200
+Title          : Cumulative Update for Windows Server 2016 for x64-based Systems (KB4015438)
+UpdateID       : a69e4d69-0a50-4e79-a814-4b809d392071
+PSComputerName : chi-nweb</dev:code>
+<dev:remarks><maml:para>Scan the specified computer for available updates but don't install the.
+</maml:para>
+</dev:remarks>
+</command:example>
+<command:example><maml:title>Example 2</maml:title>
+<dev:code>PS C:\&gt;Update-MyNanoServer chi-nweb -credential $cred</dev:code>
+<dev:remarks><maml:para>Install updates using alternate credentials.
+</maml:para>
+</dev:remarks>
+</command:example>
+</command:examples>
+<command:relatedLinks><maml:navigationLink><maml:linkText>Get-CimInstance</maml:linkText>
+<maml:uri></maml:uri>
+</maml:navigationLink>
+</command:relatedLinks>
+</command:command>
+</helpItems>

@@ -1,8 +1,14 @@
 ﻿#requires -version 5.0
 #requires -RunAsAdministrator
 
-#this version is designed with defaults for CHI-P50
-#creating a domain joined image will require a CredSSP session
+#creating a domain joined image might require a CredSSP session
+#unless you pre-stage an AD computer account 
+
+<#
+My Nano images are for lab testing so passwords are not critical. 
+You need to set a default password to create the Nano image
+but you can always change it later through your own tooling.
+#>
 
 Function New-MyNanoImage {
 
@@ -13,7 +19,7 @@ Param(
 [string]$ComputerName,
 [Parameter(Mandatory)]
 [ValidateNotNullorEmpty()]
-[string]$Plaintext = "P@ssw0rd",
+[string]$Plaintex,
 [Parameter(Mandatory)]
 [ValidateNotNullorEmpty()]
 [string]$IPv4Address,
@@ -77,6 +83,11 @@ Write-Verbose "Image created in $($end-$Start)"
 
 }
 
+<#
+There is probably a better way to organize parameters into 
+parameter sets but doing so would break some of my existing 
+demos so I will leave this alone for now. 3/31/2017 - JH
+#>
 Function New-MyNanoVM {
 [cmdletbinding(SupportsShouldProcess)]
 Param(
@@ -138,3 +149,177 @@ if ($start) {
 }
 }
 
+Function Test-IsNanoServer {
+[cmdletbinding()]
+
+Param(
+[parameter(
+Mandatory,
+ValueFromPipeline,
+ValueFromPipelineByPropertyName,  
+HelpMessage = "Enter a computer name to test"
+)]
+[Alias("cn")]
+[string[]]$Computername,
+[PSCredential]$Credential,
+[Switch]$Quiet
+
+)
+
+Begin {
+    Write-Verbose "[BEGIN  ] Starting: $($MyInvocation.Mycommand)"  
+    $PSBoundParameters.Remove("Quiet") | Out-Null
+    $PSBoundParameters.Remove("Computername") | Out-Null
+} #begin
+
+Process {
+    foreach ($Computer in $Computername) {
+        Write-Verbose "[PROCESS] Testing $Computer"
+        $PSBoundParameters.Computername = $Computer
+        Try {
+            Write-Verbose "[PROCESS] Creating a temporary CimSession"
+            $cs = New-CimSession @PSBoundParameters -ErrorAction Stop
+        }
+        Catch {
+            Write-Warning "Oops. $($_.exception.message)"
+        }
+        if ($cs) {
+            Write-Verbose "[PROCESS] Querying Win32_OperatingSystem"
+            $os = $cs | Get-CimInstance Win32_OperatingSystem
+            if ($os.OperatingSystemSKU -match "143|144") {
+                $IsNano = $True
+            }
+            else {
+                $IsNano = $False
+            }
+            
+            if ($Quiet) {
+                $IsNano                
+            }
+            else {
+                $OS | Select-Object @{Name="Computername";Expression={$_.PSComputername.ToUpper()}},
+                Caption,OperatingSystemSKU,
+                @{Name="IsNano";Expression={$IsNano}}
+            }
+
+            Write-Verbose "[PROCESS] Removing temporary CimSession"
+            $cs | Remove-CimSession
+        }
+    }
+
+} #process
+
+End {
+    Write-Verbose "[END    ] Ending: $($MyInvocation.Mycommand)"
+} #end
+
+}
+
+Function Update-MyNanoServer {
+[cmdletbinding(SupportsShouldProcess)]
+Param(
+[Parameter(
+Position = 0,
+Mandatory,
+ValueFromPipeline,
+ValueFromPipelineByPropertyName,  
+HelpMessage = "Enter the name of a Nano server to update"
+)]
+[Alias("cn")]
+[ValidateNotNullorEmpty()]
+[string]$Computername,
+[PSCredential]$Credential,
+[switch]$ScanOnly
+)
+
+Begin {
+    Write-Verbose "[BEGIN  ] Starting: $($MyInvocation.Mycommand)"  
+    $PSBoundParameters.Remove("ScanOnly") | Out-Null
+    $ns = "root/Microsoft/windows/WindowsUpdate"
+} #begin
+
+Process {
+Try {
+    Write-Verbose "[PROCESS] Creating a CIM Session to $computername"
+    $cs = New-CimSession @psboundparameters -ErrorAction stop
+}
+Catch {
+    Write-Error $_
+}
+
+if ($cs) {
+
+    $sess = New-CimInstance -Namespace $ns -ClassName MSFT_WUOperationsSession -CimSession $cs -WhatIf:$False
+    
+    if ($ScanOnly) {
+        Write-Verbose "[PROCESS] Scanning for updates"
+        $phash = @{
+        Inputobject = $sess
+        MethodName = 'ScanForUpdates'
+        Arguments = @{SearchCriteria="IsInstalled=0";OnlineScan=$True}
+        }
+
+        $scan = Invoke-CimMethod @phash
+        
+        if ($scan.Updates) {
+            $scan.Updates | Add-Member -MemberType Scriptproperty -Name KBArticleID -value {
+              [regex]$rx="\bKB\d+\b"
+              $rx.Match($this.title).Value
+            } -force -PassThru
+        }
+        else {
+            Write-Host "no updates found" -ForegroundColor Magenta
+        }
+    }
+    else {
+        Write-Verbose "[PROCESS] Apply Applicable Updates"
+        Invoke-CimMethod -InputObject $sess -MethodName ApplyApplicableUpdates
+    }
+
+    #remove session
+    Write-Verbose "[PROCESS] Cleaning up cimsessions"
+    $cs | Remove-CimSession
+}
+} #process
+End {
+    Write-Verbose "[END    ] Ending: $($MyInvocation.Mycommand)"
+} #end
+
+} #end function
+
+Function Set-MatchingTimeZone {
+[cmdletbinding(supportsShouldProcess)]
+Param(
+    [Parameter(
+    Position = 0,
+    Mandatory,
+    ValueFromPipeline,
+    ValueFromPipelineByPropertyName,  
+    HelpMessage = "Enter the name of a Nano server to update"
+)]
+[Alias("cn")]
+[ValidateNotNullorEmpty()]
+[string]$Computername,
+[PSCredential]$Credential
+)
+
+Begin {
+    Write-Verbose "[BEGIN  ] Starting: $($MyInvocation.Mycommand)"  
+    #get host time zone
+    $zone = (Get-Timezone).id
+    Write-Verbose "[BEGIN  ] local host time zone is '$zone'"
+    $sb = { Set-Timezone -Name $using:zone -PassThru }
+    $PSBoundParameters.Add("scriptblock",$sb) | Out-Null
+} #begin
+
+Process {
+    Write-Verbose "[PROCESS] Setting timezone on $computername"
+    if ($PSCmdlet.ShouldProcess($computername,"Setting time zone to $zone")) {
+        Invoke-Command @PSBoundParameters | Select-object -property PSComputername,ID
+    }
+} #process
+
+End {
+    Write-Verbose "[END    ] Ending: $($MyInvocation.Mycommand)"
+} #end
+}
