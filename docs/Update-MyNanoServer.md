@@ -4,7 +4,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Update-NanoServer
+# Update-MyNanoServer
 
 ## SYNOPSIS
 Get Windows updates on a Nano server installation.
@@ -12,7 +12,7 @@ Get Windows updates on a Nano server installation.
 ## SYNTAX
 
 ```
-Update-NanoServer [-Computername] <String> [-Credential <PSCredential>] [-ScanOnly] [-WhatIf] [-Confirm]
+Update-MyNanoServer [-Computername] <String> [-Credential <PSCredential>] [-ScanOnly] [-WhatIf] [-Confirm]
 ```
 
 ## DESCRIPTION
@@ -22,7 +22,7 @@ Get and install Windows updates for a Nano server. This command uses the CIM cmd
 
 ### Example 1
 ```
-PS C:\>update-nanoserver chi-nweb -ScanOnly
+PS C:\>update-mynanoserver chi-nweb -ScanOnly
 
 
 KBArticleID    : KB4013418
@@ -54,7 +54,7 @@ Scan the specified computer for available updates but don't install the.
 
 ### Example 2
 ```
-PS C:\>update-nanoserver chi-nweb -credential $cred
+PS C:\>update-mynanoserver chi-nweb -credential $cred
 ```
 
 Install updates using alternate credentials.
