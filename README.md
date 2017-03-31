@@ -3,10 +3,10 @@ A PowerShell module with commands for working with Nano server images and Hyper-
 
 The module contains these commands
 
-* [New-MyNanoImage](docs\New-MyNanoImage.md)
-* [New-MyNanoVM](docs\New-MyNanoVM.md)
-* [Set-MatchingTimeZone](docs\Set-MatchingTimeZone.md)
-* [Update-MyNanoServer](docs\Update-MyNanoServer)
+* [New-MyNanoImage](docs/New-MyNanoImage.md)
+* [New-MyNanoVM](docs/New-MyNanoVM.md)
+* [Set-MatchingTimeZone](docs/Set-MatchingTimeZone.md)
+* [Update-MyNanoServer](docs/Update-MyNanoServer)
 
 You might use the module like this:
 
