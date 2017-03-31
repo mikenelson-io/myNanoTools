@@ -6,7 +6,7 @@ The module contains these commands
 * [New-MyNanoImage](docs/New-MyNanoImage.md)
 * [New-MyNanoVM](docs/New-MyNanoVM.md)
 * [Set-MatchingTimeZone](docs/Set-MatchingTimeZone.md)
-* [Update-MyNanoServer](docs/Update-MyNanoServer)
+* [Update-MyNanoServer](docs/Update-MyNanoServer.md)
 
 You might use the module like this:
 
